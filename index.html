@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Polla Masters Augusta 2026</title>
 
-  <!-- Fuente premium -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Fuente premium (bien puesta) -->
+  https://fonts.googleapis.com
+  https://fonts.gstatic.com
+  https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap
 
   <style>
     :root{
@@ -49,7 +49,7 @@
       align-items:center;
       border-radius:999px;
       font-size:12px;
-      font-weight:800;
+      font-weight:900;
       letter-spacing:.4px;
       box-shadow:0 10px 26px rgba(0,0,0,.25);
     }
@@ -78,7 +78,7 @@
       border:1px solid rgba(255,255,255,.10);
       color:var(--text);
       font-size:12px;
-      font-weight:700;
+      font-weight:800;
     }
 
     .container{
@@ -120,7 +120,7 @@
       margin-top:6px;
       font-size:12px;
       color:rgba(255,255,255,.85);
-      font-weight:700;
+      font-weight:800;
     }
 
     .rank-row{
@@ -132,6 +132,14 @@
       border-radius:12px;
       margin-bottom:8px;
       border:1px solid rgba(255,255,255,.10);
+      cursor:pointer;
+      user-select:none;
+      transition:transform .12s ease, background .12s ease;
+    }
+
+    .rank-row:hover{
+      transform:translateY(-1px);
+      background:rgba(0,0,0,.28);
     }
 
     .rank-left{
@@ -207,6 +215,9 @@
       transition:transform .2s ease, box-shadow .2s ease;
       position:relative;
       overflow:hidden;
+
+      /* ✅ Esto evita que al “saltar” la card quede tapada por el sticky */
+      scroll-margin-top: 140px;
     }
 
     .card::before{
@@ -319,11 +330,71 @@
       padding:10px 12px;
       border-radius:12px;
       color:var(--text);
-      font-weight:800;
+      font-weight:900;
       font-size:13px;
       display:none;
       z-index:999;
       box-shadow:0 12px 30px rgba(0,0,0,.35);
+    }
+
+    /* ✅ MODAL / BOTTOM SHEET (WOW + SOLUCIÓN REAL) */
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index:1000;
+      padding:18px;
+    }
+    .modal.show{ display:flex; }
+
+    .sheet{
+      width:min(720px, 100%);
+      background:linear-gradient(180deg, rgba(17,28,23,.98), rgba(17,28,23,.92));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      box-shadow:0 22px 60px rgba(0,0,0,.55);
+      overflow:hidden;
+      transform:translateY(10px);
+      animation:sheetIn .16s ease-out forwards;
+    }
+    @keyframes sheetIn{
+      to{ transform:translateY(0); }
+    }
+
+    .sheet-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 14px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:radial-gradient(700px 120px at 20% 0%, rgba(15,138,99,.22), transparent 60%);
+    }
+    .sheet-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .sheet-title .t{
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:420px;
+    }
+    .xbtn{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      padding:8px 10px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .sheet-body{
+      padding:12px 14px 16px;
     }
   </style>
 </head>
@@ -337,6 +408,7 @@
     <span class="chip" id="subtitle">Esperando actualización…</span>
     <span class="chip">Regla: gana el total más bajo</span>
     <span class="chip">Corte: score real al corte</span>
+    <span class="chip">Tip: toca un nombre del ranking 👇</span>
   </div>
 </header>
 
@@ -347,7 +419,7 @@
     <div class="lb-top">
       <div>
         <h2>🏆 Ranking</h2>
-        <div class="lb-sub" id="lbsub">Actualiza los scores en el JSON y listo.</div>
+        <div class="lb-sub" id="lbsub">Toca un apostador para ver su card.</div>
       </div>
       <div class="btns">
         <button onclick="copyWhatsApp()">📋 Copiar WhatsApp</button>
@@ -356,15 +428,32 @@
     <div id="ranking"></div>
   </div>
 
-  <!-- CARDS -->
+  <!-- CARDS (lista completa) -->
   <div class="grid" id="cards"></div>
 </div>
 
 <footer>
-  Hecho para descrestarlos 😎 · Actualiza en 30 segundos · Comparte el link en WhatsApp
+  Hecho para descrestarlos 😎 · Toca un nombre en el ranking para ver su card sin que el tablero tape nada
 </footer>
 
 <div class="toast" id="toast">Copiado ✅</div>
+
+<!-- ✅ Modal / Bottom Sheet -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="Detalle apostador">
+    <div class="sheet-top">
+      <div class="sheet-title">
+        <div class="avatar" id="mAvatar">??</div>
+        <div>
+          <div class="t" id="mName">Apostador</div>
+          <div class="lb-sub" id="mMeta">Detalle</div>
+        </div>
+      </div>
+      <button class="xbtn" id="mClose">Cerrar ✕</button>
+    </div>
+    <div class="sheet-body" id="mBody"></div>
+  </div>
+</div>
 
 <script>
 /**
@@ -403,8 +492,6 @@ const data = {
     { name:"Fernando Fierro", picks:["Scottie Scheffler","Bryson DeChambeau","Jon Rahm","Rory McIlroy","Ludvig Åberg"]},
     { name:"Mauricio Castillo", picks:["Rory McIlroy","Scottie Scheffler","Ludvig Åberg","Robert MacIntyre","Matt Fitzpatrick"]},
     { name:"Hugo Castañeda",  picks:["Rory McIlroy","Scottie Scheffler","Nicolás Echavarría","Xander Schauffele","Collin Morikawa"]},
-
-    /* ✅ NUEVO: Edwin incluido */
     { name:"Edwin González",  picks:["Scottie Scheffler","Jon Rahm","Bryson DeChambeau","Rory McIlroy","Xander Schauffele"]}
   ]
 };
@@ -428,11 +515,8 @@ function scoreClass(v){
   return v < 0 ? "good" : "bad";
 }
 
-function render(){
-  $("subtitle").textContent = `📅 ${data.dateLabel} · ${data.status}`;
-  $("lbsub").textContent = `Actualizado: ${data.dateLabel} · Estado: ${data.status}`;
-
-  const totals = data.bettors.map(b=>{
+function computeTotals(){
+  return data.bettors.map(b=>{
     const scores = b.picks.map(p => data.leaderboard[p]);
     const total = hasAny(scores) ? sum(scores) : null; // “hasta el momento”
     return { ...b, scores, total };
@@ -442,14 +526,21 @@ function render(){
     if (b.total == null) return -1;
     return a.total - b.total;
   });
+}
 
-  // Render ranking
+function render(){
+  $("subtitle").textContent = `📅 ${data.dateLabel} · ${data.status}`;
+  $("lbsub").textContent = `Toca un apostador para ver su card. · ${data.dateLabel} · ${data.status}`;
+
+  const totals = computeTotals();
+
+  // Ranking clickable
   $("ranking").innerHTML = "";
   totals.forEach((t,i)=>{
     const medalClass = i===0 ? "gold" : i===1 ? "silver" : i===2 ? "bronze" : "";
     const totalCls = scoreClass(t.total);
     $("ranking").innerHTML += `
-      <div class="rank-row">
+      <div class="rank-row" data-name="${encodeURIComponent(t.name)}" title="Ver card de ${t.name}">
         <div class="rank-left">
           <div class="pos ${medalClass}">${i+1}</div>
           <div class="name">${t.name}</div>
@@ -459,12 +550,12 @@ function render(){
     `;
   });
 
-  // Render cards
+  // Cards list
   $("cards").innerHTML = "";
   totals.forEach(t=>{
     const totalCls = scoreClass(t.total);
     $("cards").innerHTML += `
-      <div class="card">
+      <div class="card" id="card-${cssSafe(t.name)}">
         <div class="card-head">
           <div class="who">
             <div class="avatar">${initials(t.name)}</div>
@@ -486,7 +577,79 @@ function render(){
       </div>
     `;
   });
+
+  // Click handlers for ranking rows
+  document.querySelectorAll(".rank-row").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const name = decodeURIComponent(el.getAttribute("data-name"));
+      openModalFor(name);
+    });
+  });
 }
+
+function cssSafe(name){
+  // convierte nombre a id seguro
+  return name.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/(^-|-$)/g,"");
+}
+
+/* ✅ Modal logic */
+const modal = $("modal");
+const mClose = $("mClose");
+
+function openModalFor(name){
+  const totals = computeTotals();
+  const t = totals.find(x => x.name === name);
+  if(!t) return;
+
+  $("mAvatar").textContent = initials(t.name);
+  $("mName").textContent = t.name;
+  $("mMeta").textContent = `📅 ${data.dateLabel} · ${data.status} · TOTAL: ${fmt(t.total)}`;
+
+  const totalCls = scoreClass(t.total);
+  $("mMeta").className = "lb-sub " + totalCls;
+
+  $("mBody").innerHTML = `
+    <div class="card" style="margin:0; box-shadow:none;">
+      <div class="card-head">
+        <div class="who">
+          <div class="avatar">${initials(t.name)}</div>
+          <div class="nm">${t.name}</div>
+        </div>
+        <div class="total ${totalCls}">TOTAL: ${fmt(t.total)}</div>
+      </div>
+      <div class="players">
+        ${t.picks.map(p=>{
+          const v = data.leaderboard[p];
+          return `
+            <div class="player">
+              <span>${p}</span>
+              <span class="${scoreClass(v)}">${fmt(v)}</span>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden","false");
+}
+
+function closeModal(){
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden","true");
+}
+
+mClose.addEventListener("click", closeModal);
+modal.addEventListener("click", (e)=>{
+  if(e.target === modal) closeModal(); // click fuera de la hoja
+});
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape") closeModal();
+});
 
 function toast(msg){
   const t = $("toast");
@@ -496,18 +659,7 @@ function toast(msg){
 }
 
 function copyWhatsApp(){
-  // ranking + detalle listo para pegar en grupo
-  const totals = data.bettors.map(b=>{
-    const scores = b.picks.map(p => data.leaderboard[p]);
-    const total = hasAny(scores) ? sum(scores) : null;
-    return { ...b, total };
-  }).sort((a,b)=>{
-    if (a.total == null && b.total == null) return 0;
-    if (a.total == null) return 1;
-    if (b.total == null) return -1;
-    return a.total - b.total;
-  });
-
+  const totals = computeTotals();
   let text = `🏌️‍♂️ MASTERS AUGUSTA 2026 – POLLA\n📅 ${data.dateLabel} · ${data.status}\n\n🏆 RANKING\n`;
   totals.forEach((t,i)=>{
     const medal = i===0?"🥇": i===1?"🥈": i===2?"🥉": `${i+1}.`;
