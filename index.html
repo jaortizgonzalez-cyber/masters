@@ -126,6 +126,10 @@ const data = {
     {
       name: "German Ramos",
       picks: ["Scottie Scheffler","Rory McIlroy","Jon Rahm","Ludvig Åberg","Xander Schauffele"]
+    },
+    {
+      name: "Fernando Fierro",
+      picks: ["Scottie Scheffler","Bryson DeChambeau","Jon Rahm","Rory McIlroy","Ludvig Åberg"]
     }
   ]
 };
@@ -156,24 +160,21 @@ function sumScores(scores){
 function render(){
   $("subtitle").textContent = `📅 ${data.dateLabel} • Estado: ${data.status}`;
 
-  // calcular totales
   const totals = data.bettors.map(b=>{
     const scores = b.picks.map(p=>data.leaderboard[p]);
     const total = sumScores(scores);
     return { ...b, total, scores };
   });
 
-  // ranking (solo los que tienen total)
   const ranked = [...totals].sort((a,b)=>{
     if(a.total===null && b.total===null) return 0;
     if(a.total===null) return 1;
     if(b.total===null) return -1;
-    return a.total - b.total; // menor gana
+    return a.total - b.total;
   });
 
   const leader = ranked.find(r=>r.total!==null)?.total ?? null;
 
-  // pintar ranking
   $("ranking").innerHTML = "";
   ranked.forEach((r,i)=>{
     const diff = (leader===null || r.total===null) ? "—" : (r.total - leader === 0 ? "Líder" : `+${r.total - leader}`);
@@ -194,7 +195,6 @@ function render(){
     $("ranking").appendChild(div);
   });
 
-  // pintar cards
   $("cards").innerHTML = "";
   ranked.forEach(b=>{
     const totalClass = b.total===null ? "" : (b.total < 0 ? "good" : (b.total > 0 ? "bad" : ""));
@@ -225,7 +225,6 @@ function render(){
 }
 
 function copyWhatsApp(){
-  // resumen estilo WhatsApp (bloques)
   const totals = data.bettors.map(b=>{
     const total = sumScores(b.picks.map(p=>data.leaderboard[p]));
     return {name:b.name,total, picks:b.picks};
@@ -235,6 +234,7 @@ function copyWhatsApp(){
     if(b.total===null) return -1;
     return a.total - b.total;
   });
+
   const leader = totals.find(t=>t.total!==null)?.total ?? null;
 
   let txt = `🏌️‍♂️ MASTERS AUGUSTA 2026 – POLLA\n📊 ${data.dateLabel} • ${data.status}\n\n🏆 RANKING\n`;
@@ -244,7 +244,9 @@ function copyWhatsApp(){
     const medal = i===0?"🥇": i===1?"🥈": i===2?"🥉": `${i+1}.`;
     txt += `${medal} ${t.name}: ${totalTxt} (${diff})\n`;
   });
+
   txt += `\n----------------------------\n\n`;
+
   totals.forEach(t=>{
     txt += `👤 ${t.name}\n`;
     t.picks.forEach(p=>{
