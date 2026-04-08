@@ -4,89 +4,213 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Polla Masters Augusta 2026</title>
+
+  <!-- GOOGLE FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg:#0b1220; --card:#111a2e; --muted:#94a3b8; --text:#e5e7eb;
-      --line:#22304a; --good:#22c55e; --bad:#ef4444; --chip:#1f2a44;
-      --gold:#f59e0b; --silver:#cbd5e1; --bronze:#fb7185;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --bg:#07150e;
+      --green:#0b6e4f;
+      --green-soft:#0f8a63;
+      --card:#111c17;
+      --text:#e6f0eb;
+      --muted:#9fb8ad;
+      --gold:#f4c430;
+      --silver:#cbd5e1;
+      --bronze:#fb7185;
+      --danger:#ef4444;
+      --success:#22c55e;
     }
-    body{margin:0;background:linear-gradient(180deg,#070b14, #0b1220 30%, #070b14);color:var(--text);font-family:var(--sans);}
-    header{padding:22px 16px 10px;max-width:980px;margin:0 auto;}
-    h1{margin:0;font-size:20px;letter-spacing:.3px}
-    .sub{margin-top:6px;color:var(--muted);font-size:13px}
-    .wrap{max-width:980px;margin:0 auto;padding:10px 16px 28px;}
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
-    .card{background:rgba(17,26,46,.9);border:1px solid var(--line);border-radius:14px;padding:14px 14px 12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
-    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .name{font-weight:700;font-size:16px}
-    .total{font-family:var(--mono);font-weight:800;font-size:16px;padding:6px 10px;border-radius:10px;background:var(--chip);border:1px solid var(--line)}
-    .total.good{border-color:rgba(34,197,94,.45);color:#bbf7d0}
-    .total.bad{border-color:rgba(239,68,68,.45);color:#fecaca}
-    .players{margin-top:10px;border-top:1px dashed rgba(148,163,184,.25);padding-top:10px}
-    .p{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(148,163,184,.08)}
-    .p:last-child{border-bottom:none}
-    .p .left{display:flex;gap:10px;align-items:center;min-width:0}
-    .tag{font-family:var(--mono);font-size:12px;color:var(--muted);background:rgba(148,163,184,.08);border:1px solid rgba(148,163,184,.15);padding:2px 6px;border-radius:999px}
-    .p .player{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .p .score{font-family:var(--mono);font-weight:700}
-    .score.good{color:#86efac}
-    .score.bad{color:#fca5a5}
-    .score.even{color:#e5e7eb}
-    .rankBox{margin-top:14px}
-    .rankTitle{font-weight:700;margin-bottom:8px}
-    .rank{display:flex;flex-direction:column;gap:8px}
-    .r{display:flex;align-items:center;justify-content:space-between;background:rgba(148,163,184,.06);border:1px solid rgba(148,163,184,.12);border-radius:12px;padding:10px}
-    .r .pos{font-family:var(--mono);font-weight:800}
-    .r .diff{font-family:var(--mono);color:var(--muted)}
-    .medals{display:flex;gap:8px;align-items:center}
-    .medal{width:10px;height:10px;border-radius:50%}
-    .m1{background:var(--gold)} .m2{background:var(--silver)} .m3{background:var(--bronze)}
-    footer{max-width:980px;margin:0 auto;padding:0 16px 22px;color:var(--muted);font-size:12px}
-    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    button{background:rgba(148,163,184,.08);border:1px solid rgba(148,163,184,.18);color:var(--text);border-radius:12px;padding:10px 12px;font-weight:700;cursor:pointer}
-    button:hover{background:rgba(148,163,184,.12)}
-    .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0b1220;border:1px solid var(--line);
-      padding:10px 12px;border-radius:12px;color:var(--text);font-size:13px;display:none}
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#04110b,#07150e 40%);
+      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont;
+      color:var(--text);
+    }
+
+    header{
+      padding:28px 20px 20px;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    .badge{
+      background:var(--green);
+      padding:6px 12px;
+      display:inline-block;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.3px;
+    }
+
+    h1{
+      margin:14px 0 6px;
+      font-size:28px;
+      font-weight:800;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:auto;
+      padding:20px;
+    }
+
+    /* LEADERBOARD */
+    .leaderboard{
+      background:linear-gradient(135deg,#0b6e4f,#0f8a63);
+      border-radius:18px;
+      padding:20px;
+      margin-bottom:28px;
+      position:sticky;
+      top:12px;
+      z-index:10;
+      box-shadow:0 15px 40px rgba(0,0,0,.35);
+    }
+
+    .leaderboard h2{
+      margin:0 0 14px;
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .rank-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      background:rgba(0,0,0,.25);
+      border-radius:12px;
+      margin-bottom:8px;
+    }
+
+    .rank-row span{
+      font-weight:700;
+    }
+
+    .pos{
+      width:28px;
+    }
+
+    .gold{color:var(--gold)}
+    .silver{color:var(--silver)}
+    .bronze{color:var(--bronze)}
+
+    /* CARDS */
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    @media(min-width:900px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
+
+    .card{
+      background:var(--card);
+      padding:18px;
+      border-radius:18px;
+      box-shadow:0 12px 30px rgba(0,0,0,.3);
+      transition:transform .2s;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+    }
+
+    .card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .name{
+      font-size:17px;
+      font-weight:800;
+    }
+
+    .total{
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .good{color:var(--success)}
+    .bad{color:var(--danger)}
+
+    .players{
+      border-top:1px dashed rgba(255,255,255,.1);
+      margin-top:12px;
+      padding-top:12px;
+    }
+
+    .player{
+      display:flex;
+      justify-content:space-between;
+      padding:6px 0;
+      font-size:14px;
+    }
+
+    footer{
+      text-align:center;
+      padding:30px 20px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    button{
+      background:var(--green);
+      border:none;
+      color:white;
+      padding:10px 16px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:10px;
+    }
+
+    button:hover{opacity:.9}
   </style>
 </head>
+
 <body>
+
 <header>
-  <h1>🏌️‍♂️ Masters Augusta 2026 – Polla</h1>
-  <div class="sub" id="subtitle">📅 Jueves 9 Abr • Estado: esperando leaderboard…</div>
-  <div class="btns">
-    <button onclick="copyWhatsApp()">📋 Copiar resumen WhatsApp</button>
-  </div>
+  <span class="badge">🏌️ MASTERS AUGUSTA 2026</span>
+  <h1>Polla Oficial</h1>
+  <div class="subtitle" id="subtitle">Esperando actualización…</div>
 </header>
 
-<div class="wrap">
-  <div class="card rankBox">
-    <div class="rankTitle">🏆 Ranking</div>
-    <div class="rank" id="ranking"></div>
+<div class="container">
+
+  <!-- LEADERBOARD -->
+  <div class="leaderboard">
+    <h2>🏆 Leaderboard</h2>
+    <div id="ranking"></div>
+    <button onclick="copyWhatsApp()">📋 Copiar ranking para WhatsApp</button>
   </div>
 
+  <!-- CARDS -->
   <div class="grid" id="cards"></div>
 </div>
 
 <footer>
-  <div>📌 Regla: gana el total más bajo (suma de 5 scores). Jugador fuera del corte: se toma su score real al corte.</div>
+  Gana el total más bajo · Update en vivo · Augusta vibes
 </footer>
 
-<div class="toast" id="toast">Copiado ✅</div>
-
 <script>
-/**
- * ✅ SOLO EDITA ESTA SECCIÓN PARA ACTUALIZAR RESULTADOS
- * - dateLabel: texto del día
- * - status: mensaje corto
- * - leaderboard: scores por jugador (formato: -5, +2, 0). Usa null si aún no hay score.
- */
 const data = {
-  dateLabel: "Jueves 9 Abr",
-  status: "En curso",
-  // Scores por jugador (To Par). Usa 0 para "E". Usa null si no aparece aún.
+  dateLabel: "Jueves · Ronda 1",
+  status: "En juego",
   leaderboard: {
     "Scottie Scheffler": null,
     "Jon Rahm": null,
@@ -102,169 +226,62 @@ const data = {
     "Viktor Hovland": null
   },
   bettors: [
-    {
-      name: "Ronnie Sanchez",
-      picks: ["Scottie Scheffler","Jon Rahm","Xander Schauffele","Cameron Young","Hideki Matsuyama"]
-    },
-    {
-      name: "Juan Ardila",
-      picks: ["Scottie Scheffler","Bryson DeChambeau","Ludvig Åberg","Tommy Fleetwood","Jon Rahm"]
-    },
-    {
-      name: "Andrés Ortiz",
-      // ✅ CAMBIO APLICADO: entra Rory, sale Hideki
-      picks: ["Scottie Scheffler","Jon Rahm","Rory McIlroy","Xander Schauffele","Bryson DeChambeau"]
-    },
-    {
-      name: "Paul Franco",
-      picks: ["Scottie Scheffler","Rory McIlroy","Tommy Fleetwood","Bryson DeChambeau","Nicolás Echavarría"]
-    },
-    {
-      name: "Felipe Bernal",
-      picks: ["Rory McIlroy","Ludvig Åberg","Brooks Koepka","Viktor Hovland","Xander Schauffele"]
-    },
-    {
-      name: "German Ramos",
-      picks: ["Scottie Scheffler","Rory McIlroy","Jon Rahm","Ludvig Åberg","Xander Schauffele"]
-    },
-    {
-      name: "Fernando Fierro",
-      picks: ["Scottie Scheffler","Bryson DeChambeau","Jon Rahm","Rory McIlroy","Ludvig Åberg"]
-    }
+    { name:"Ronnie Sanchez", picks:["Scottie Scheffler","Jon Rahm","Xander Schauffele","Cameron Young","Hideki Matsuyama"]},
+    { name:"Juan Ardila", picks:["Scottie Scheffler","Bryson DeChambeau","Ludvig Åberg","Tommy Fleetwood","Jon Rahm"]},
+    { name:"Andrés Ortiz", picks:["Scottie Scheffler","Jon Rahm","Rory McIlroy","Xander Schauffele","Bryson DeChambeau"]},
+    { name:"Paul Franco", picks:["Scottie Scheffler","Rory McIlroy","Tommy Fleetwood","Bryson DeChambeau","Nicolás Echavarría"]},
+    { name:"Felipe Bernal", picks:["Rory McIlroy","Ludvig Åberg","Brooks Koepka","Viktor Hovland","Xander Schauffele"]},
+    { name:"German Ramos", picks:["Scottie Scheffler","Rory McIlroy","Jon Rahm","Ludvig Åberg","Xander Schauffele"]},
+    { name:"Fernando Fierro", picks:["Scottie Scheffler","Bryson DeChambeau","Jon Rahm","Rory McIlroy","Ludvig Åberg"]}
   ]
 };
-// ✅ FIN DE LA SECCIÓN EDITABLE
 
-const $ = (id)=>document.getElementById(id);
-
-function fmtScore(v){
-  if (v === null || v === undefined) return "—";
-  if (v === 0) return "E";
-  return (v > 0 ? `+${v}` : `${v}`);
-}
-function clsScore(v){
-  if (v === null || v === undefined) return "";
-  if (v === 0) return "even";
-  return v < 0 ? "good" : "bad";
-}
-function sumScores(scores){
-  // Si falta alguno (null) lo ignoramos para “hasta el momento”
-  let s = 0, hasAny=false;
-  for(const v of scores){
-    if (v === null || v === undefined) continue;
-    s += v; hasAny=true;
-  }
-  return hasAny ? s : null;
-}
+const fmt=v=>v==null?"—":(v===0?"E":v>0?`+${v}`:v);
+const sum=a=>a.filter(v=>v!=null).reduce((s,v)=>s+v,0);
+const $=id=>document.getElementById(id);
 
 function render(){
-  $("subtitle").textContent = `📅 ${data.dateLabel} • Estado: ${data.status}`;
+  $("subtitle").textContent = `📅 ${data.dateLabel} · ${data.status}`;
 
   const totals = data.bettors.map(b=>{
     const scores = b.picks.map(p=>data.leaderboard[p]);
-    const total = sumScores(scores);
-    return { ...b, total, scores };
+    return{...b,total:scores.some(v=>v!=null)?sum(scores):null,scores};
+  }).sort((a,b)=>a.total-b.total);
+
+  $("ranking").innerHTML="";
+  totals.forEach((t,i)=>{
+    $("ranking").innerHTML+=`
+      <div class="rank-row">
+        <span class="pos ${i==0?'gold':i==1?'silver':i==2?'bronze':''}">${i+1}</span>
+        <span>${t.name}</span>
+        <span class="${t.total<0?'good':t.total>0?'bad':''}">${fmt(t.total)}</span>
+      </div>`;
   });
 
-  const ranked = [...totals].sort((a,b)=>{
-    if(a.total===null && b.total===null) return 0;
-    if(a.total===null) return 1;
-    if(b.total===null) return -1;
-    return a.total - b.total;
-  });
-
-  const leader = ranked.find(r=>r.total!==null)?.total ?? null;
-
-  $("ranking").innerHTML = "";
-  ranked.forEach((r,i)=>{
-    const diff = (leader===null || r.total===null) ? "—" : (r.total - leader === 0 ? "Líder" : `+${r.total - leader}`);
-    const medal = i===0 ? "m1" : i===1 ? "m2" : i===2 ? "m3" : "";
-    const totalClass = r.total===null ? "" : (r.total < 0 ? "good" : (r.total > 0 ? "bad" : ""));
-    const div = document.createElement("div");
-    div.className = "r";
-    div.innerHTML = `
-      <div class="medals">
-        <div class="medal ${medal}"></div>
-        <div>
-          <div class="pos">${i+1}. ${r.name}</div>
-          <div class="diff">${diff}</div>
+  $("cards").innerHTML="";
+  totals.forEach(t=>{
+    $("cards").innerHTML+=`
+      <div class="card">
+        <div class="card-head">
+          <div class="name">${t.name}</div>
+          <div class="total ${t.total<0?'good':t.total>0?'bad':''}">${fmt(t.total)}</div>
         </div>
-      </div>
-      <div class="total ${totalClass}">${r.total===null ? "—" : (r.total===0 ? "E" : (r.total>0?`+${r.total}`:`${r.total}`))}</div>
-    `;
-    $("ranking").appendChild(div);
-  });
-
-  $("cards").innerHTML = "";
-  ranked.forEach(b=>{
-    const totalClass = b.total===null ? "" : (b.total < 0 ? "good" : (b.total > 0 ? "bad" : ""));
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="row">
-        <div class="name">👤 ${b.name}</div>
-        <div class="total ${totalClass}">TOTAL: ${b.total===null ? "—" : (b.total===0 ? "E" : (b.total>0?`+${b.total}`:`${b.total}`))}</div>
-      </div>
-      <div class="players">
-        ${b.picks.map((p,idx)=> {
-          const v = data.leaderboard[p];
-          return `
-            <div class="p">
-              <div class="left">
-                <span class="tag">J${idx+1}</span>
-                <span class="player">${p}</span>
-              </div>
-              <span class="score ${clsScore(v)}">${fmtScore(v)}</span>
-            </div>
-          `;
-        }).join("")}
-      </div>
-    `;
-    $("cards").appendChild(card);
+        <div class="players">
+          ${t.picks.map((p,i)=>`
+            <div class="player">
+              <span>${p}</span>
+              <span>${fmt(data.leaderboard[p])}</span>
+            </div>`).join("")}
+        </div>
+      </div>`;
   });
 }
 
 function copyWhatsApp(){
-  const totals = data.bettors.map(b=>{
-    const total = sumScores(b.picks.map(p=>data.leaderboard[p]));
-    return {name:b.name,total, picks:b.picks};
-  }).sort((a,b)=>{
-    if(a.total===null && b.total===null) return 0;
-    if(a.total===null) return 1;
-    if(b.total===null) return -1;
-    return a.total - b.total;
-  });
-
-  const leader = totals.find(t=>t.total!==null)?.total ?? null;
-
-  let txt = `🏌️‍♂️ MASTERS AUGUSTA 2026 – POLLA\n📊 ${data.dateLabel} • ${data.status}\n\n🏆 RANKING\n`;
-  totals.forEach((t,i)=>{
-    const diff = (leader===null || t.total===null) ? "—" : (t.total-leader===0 ? "Líder" : `+${t.total-leader}`);
-    const totalTxt = t.total===null ? "—" : (t.total===0 ? "E" : (t.total>0?`+${t.total}`:`${t.total}`));
-    const medal = i===0?"🥇": i===1?"🥈": i===2?"🥉": `${i+1}.`;
-    txt += `${medal} ${t.name}: ${totalTxt} (${diff})\n`;
-  });
-
-  txt += `\n----------------------------\n\n`;
-
-  totals.forEach(t=>{
-    txt += `👤 ${t.name}\n`;
-    t.picks.forEach(p=>{
-      const v = data.leaderboard[p];
-      txt += `• ${p}: ${fmtScore(v)}\n`;
-    });
-    const totalTxt = t.total===null ? "—" : (t.total===0 ? "E" : (t.total>0?`+${t.total}`:`${t.total}`));
-    txt += `➡️ TOTAL: ${totalTxt}\n\n----------------------------\n\n`;
-  });
-
-  navigator.clipboard.writeText(txt).then(()=>toast("Copiado ✅"));
-}
-
-function toast(msg){
-  const t = $("toast");
-  t.textContent = msg;
-  t.style.display = "block";
-  setTimeout(()=>t.style.display="none", 1200);
+  let text="🏌️‍♂️ MASTERS AUGUSTA 2026\n🏆 RANKING\n\n";
+  [...document.querySelectorAll('.rank-row')].forEach(r=>text+=r.textContent+"\n");
+  navigator.clipboard.writeText(text);
+  alert("Ranking copiado ✅");
 }
 
 render();
