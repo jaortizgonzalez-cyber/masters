@@ -1,130 +1,79 @@
 import fs from "fs";
 import { chromium } from "playwright";
 
-const URL = "https://www.pgatour.com/es/leaderboard";
+const URL = "https://www.cbssports.com/golf/leaderboard/pga-tour/";
 
-// ✅ Jugadores de la polla
 const PLAYERS = [
   "Scottie Scheffler",
   "Jon Rahm",
   "Rory McIlroy",
   "Xander Schauffele",
   "Bryson DeChambeau",
-  "Ludvig Åberg",
+  "Ludvig Aberg",
   "Tommy Fleetwood",
   "Cameron Young",
   "Hideki Matsuyama",
-  "Nicolás Echavarría",
+  "Nicolas Echavarria",
   "Brooks Koepka",
   "Viktor Hovland",
   "Collin Morikawa",
-  "Robert MacIntyre",
+  "Robert Macintyre",
   "Matt Fitzpatrick"
 ];
 
-// ✅ Normalización robusta (acentos, mayúsculas, símbolos)
 const normalize = s =>
-  s
-    ?.toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z ]/g, "")
-    .trim();
+  s.toLowerCase()
+   .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+   .replace(/[^a-z ]/g,"");
 
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({
-    viewport: { width: 1400, height: 900 }
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122 Safari/537.36"
   });
 
-  await page.goto(URL, { waitUntil: "domcontentloaded" });
+  await page.goto(URL, { waitUntil: "networkidle" });
+  await page.waitForSelector("tbody tr", { timeout: 30000 });
 
-  // ✅ CORRECCIÓN CLAVE:
-  // Esperar a que EXISTAN filas en la tabla (no visibilidad)
-  await page.waitForFunction(() => {
-    const rows = document.querySelectorAll("table tbody tr");
-    return rows.length > 10; // el leaderboard real tiene ~93
-  }, { timeout: 30000 });
-
-  const tableData = await page.evaluate(() => {
-    const table = document.querySelector("table");
-    if (!table) return null;
-
-    // ✅ Detectar columnas dinámicamente por encabezado
-    const headers = Array.from(table.querySelectorAll("thead th"))
-      .map(th => th.innerText.toLowerCase().trim());
-
-    const nameIndex = headers.findIndex(h =>
-      h.includes("jugador") || h.includes("player")
-    );
-
-    const toParIndex = headers.findIndex(h =>
-      h.includes("par")
-    );
-
-    if (nameIndex === -1 || toParIndex === -1) {
-      return null;
-    }
-
-    const rows = Array.from(table.querySelectorAll("tbody tr"));
-
-    return rows.map(tr => {
-      const cells = tr.querySelectorAll("td");
+  const rows = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll("tbody tr")).map(tr => {
+      const tds = tr.querySelectorAll("td");
       return {
-        name: cells[nameIndex]?.innerText.trim(),
-        toPar: cells[toParIndex]?.innerText.trim()
+        name: tds[1]?.innerText?.trim(),
+        toPar: tds[2]?.innerText?.trim()
       };
     });
   });
 
-  await browser.close();
-
-  // 🛑 PROTECCIÓN 1: si no pudimos leer la tabla, abortar
-  if (!tableData || tableData.length === 0) {
-    console.error("❌ No se pudo leer el leaderboard. No se actualiza el HTML.");
-    process.exit(0);
-  }
-
   const leaderboard = {};
-  let foundCount = 0;
+  let found = 0;
 
-  for (const player of PLAYERS) {
-    const row = tableData.find(r =>
-      normalize(r.name) === normalize(player)
-    );
-
-    if (!row || !row.toPar || row.toPar === "—") {
-      leaderboard[player] = null;
-    } else if (row.toPar === "E") {
-      leaderboard[player] = 0;
-      foundCount++;
+  for (const p of PLAYERS) {
+    const r = rows.find(x => normalize(x.name) === normalize(p));
+    if (!r || !r.toPar) {
+      leaderboard[p] = null;
+    } else if (r.toPar === "E") {
+      leaderboard[p] = 0;
+      found++;
     } else {
-      const value = parseInt(row.toPar.replace("+", ""), 10);
-      leaderboard[player] = isNaN(value) ? null : value;
-      if (!isNaN(value)) foundCount++;
+      leaderboard[p] = parseInt(r.toPar.replace("+",""),10);
+      found++;
     }
   }
 
-  // 🛑 PROTECCIÓN 2 (CRÍTICA):
-  // Si no encontramos al menos 3 jugadores con score → NO COMMIT
-  if (foundCount < 3) {
-    console.error(
-      `❌ Solo se detectaron ${foundCount} jugadores con score. Abortando update.`
-    );
+  if (found < 3) {
+    console.error("❌ Pocos jugadores detectados, abortando update");
     process.exit(0);
   }
 
-  const html = fs.readFileSync("index.html", "utf8");
-
-  const updatedHtml = html.replace(
+  const html = fs.readFileSync("index.html","utf8");
+  const updated = html.replace(
     /leaderboard:\s*{[\s\S]*?}/,
     `leaderboard: ${JSON.stringify(leaderboard, null, 2)}`
   );
+  fs.writeFileSync("index.html", updated);
+  console.log("✅ Leaderboard actualizado vía CBS Sports");
 
-  if (updatedHtml !== html) {
-    fs.writeFileSync("index.html", updatedHtml);
-    console.log("✅ Leaderboard actualizado correctamente");
-  } else {
-    console.log("ℹ️ Sin cambios detectados");
-  }
+  await browser.close();
 })();
