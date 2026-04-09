@@ -1,0 +1,34 @@
+name: Auto Update Masters Leaderboard
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium
+
+      - name: Run updater
+        run: node scripts/updateLeaderboard.js
+
+      - name: Commit changes
+        run: |
+          git config user.name "Masters Bot 🐊"
+          git config user.email "bot@users.noreply.github.com"
+          git add index.html
+          git commit -m "🐊 Auto update leaderboard" || echo "No changes"
+          git push
