@@ -856,9 +856,35 @@
      * - dateLabel: texto del día
      * - status: mensaje corto
      * - stakeCOP: valor apostado por persona
-     * - <html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><p></p><div style="background-color:#FFEB9C; width:100%; border-style:solid; border-color:#9C6500; border-width:1pt; padding:2pt; font-size:10pt; line-height:12pt; font-family:'Calibri'; color:Black; text-align:left"><span style="color:#9C6500">¡ATENCIÓN!:</span>Este correo electrónico fue enviado desde fuera de la organización. No haga clic en enlaces ni abra archivos adjuntos, a menos que reconozca la cuenta de correo remitente y observe que el contenido es seguro. Seguridad de la Información.</div><br><p></p><div><div dir="ltr" style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">leaderboard: {</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Rory McIlroy&quot;: -5,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Scottie Scheffler&quot;: -2,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Ludvig Åberg&quot;: -1,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Tommy Fleetwood&quot;: -1,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Xander Schauffele&quot;: -1,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Brooks Koepka&quot;: 0,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Matt Fitzpatrick&quot;: +2,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Hideki Matsuyama&quot;: 0,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Robert MacIntyre&quot;: +1,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Cameron Young&quot;: +1,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Collin Morikawa&quot;: +2,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Jon Rahm&quot;: +4,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Viktor Hovland&quot;: +3,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Bryson DeChambeau&quot;: +4,</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">&nbsp; &quot;Nicolás Echavarría&quot;: +7</div><div style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">}</div><div id="ms-outlook-mobile-body-separator-line" data-applydefaultfontstyles="true" dir="ltr" style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt"><div dir="ltr" style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt"><br></div></div><div id="ms-outlook-mobile-signature" style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)"><span style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)">Enviado desde </span><span style="font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt"><a href="https://aka.ms/o0ukef">Outlook para iOS</a></span></div></div></body></html>
-<!-- LEADERBOARD_END --> 
+     * - leaderboard: scores (To Par). Usa 0 para "E". Usa null si aún no hay score.
+     */
+    const data = {
+      dateLabel: "Jueves · Ronda 1",
+      status: "En juego",
+      stakeCOP: 50000,
+
+<!-- LEADERBOARD_START -->
+      leaderboard: {
+  "Rory McIlroy": -5,
+  "Scottie Scheffler": -2,
+  "Ludvig Åberg": -1,
+  "Tommy Fleetwood": -1,
+  "Xander Schauffele": -1,
+  "Brooks Koepka": 0,
+  "Matt Fitzpatrick": 2,
+  "Hideki Matsuyama": 0,
+  "Robert MacIntyre": 1,
+  "Cameron Young": 1,
+  "Collin Morikawa": 2,
+  "Jon Rahm": 4,
+  "Viktor Hovland": 3,
+  "Bryson DeChambeau": 4,
+  "Nicolás Echavarría": 7
+}
+
+
+<!-- LEADERBOARD_END -->
+
 ,
 
       bettors: [
