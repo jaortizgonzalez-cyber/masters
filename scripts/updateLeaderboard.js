@@ -3,6 +3,7 @@ import { chromium } from "playwright";
 
 const URL = "https://www.pgatour.com/es/leaderboard";
 
+// ✅ Jugadores de la polla
 const PLAYERS = [
   "Scottie Scheffler",
   "Jon Rahm",
@@ -21,31 +22,43 @@ const PLAYERS = [
   "Matt Fitzpatrick"
 ];
 
+// ✅ Normalización robusta (acentos, mayúsculas, símbolos)
 const normalize = s =>
-  s?.toLowerCase()
+  s
+    ?.toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z ]/g, "");
+    .replace(/[^a-z ]/g, "")
+    .trim();
 
 (async () => {
   const browser = await chromium.launch();
-  const page = await browser.newPage();
+  const page = await browser.newPage({
+    viewport: { width: 1400, height: 900 }
+  });
 
-  await page.goto(URL, { waitUntil: "networkidle" });
+  await page.goto(URL, { waitUntil: "domcontentloaded" });
 
-  // ✅ Esperar a que la tabla REAL esté poblada
-  await page.waitForSelector("table tbody tr", { timeout: 20000 });
+  // ✅ CORRECCIÓN CLAVE:
+  // Esperar a que EXISTAN filas en la tabla (no visibilidad)
+  await page.waitForFunction(() => {
+    const rows = document.querySelectorAll("table tbody tr");
+    return rows.length > 10; // el leaderboard real tiene ~93
+  }, { timeout: 30000 });
 
-  const data = await page.evaluate(() => {
+  const tableData = await page.evaluate(() => {
     const table = document.querySelector("table");
-    const headerCells = Array.from(table.querySelectorAll("thead th"))
-      .map(th => th.innerText.trim().toLowerCase());
+    if (!table) return null;
 
-    const nameIndex = headerCells.findIndex(h =>
-      h.includes("player") || h.includes("jugador")
+    // ✅ Detectar columnas dinámicamente por encabezado
+    const headers = Array.from(table.querySelectorAll("thead th"))
+      .map(th => th.innerText.toLowerCase().trim());
+
+    const nameIndex = headers.findIndex(h =>
+      h.includes("jugador") || h.includes("player")
     );
 
-    const toParIndex = headerCells.findIndex(h =>
+    const toParIndex = headers.findIndex(h =>
       h.includes("par")
     );
 
@@ -66,46 +79,52 @@ const normalize = s =>
 
   await browser.close();
 
-  // 🛑 Protección crítica
-  if (!data || data.length === 0) {
-    console.error("❌ No se pudo leer el leaderboard. No se actualiza.");
+  // 🛑 PROTECCIÓN 1: si no pudimos leer la tabla, abortar
+  if (!tableData || tableData.length === 0) {
+    console.error("❌ No se pudo leer el leaderboard. No se actualiza el HTML.");
     process.exit(0);
   }
 
   const leaderboard = {};
-  let found = 0;
+  let foundCount = 0;
 
   for (const player of PLAYERS) {
-    const row = data.find(r => normalize(r.name) === normalize(player));
+    const row = tableData.find(r =>
+      normalize(r.name) === normalize(player)
+    );
 
     if (!row || !row.toPar || row.toPar === "—") {
       leaderboard[player] = null;
     } else if (row.toPar === "E") {
       leaderboard[player] = 0;
-      found++;
+      foundCount++;
     } else {
-      leaderboard[player] = parseInt(row.toPar.replace("+", ""), 10);
-      found++;
+      const value = parseInt(row.toPar.replace("+", ""), 10);
+      leaderboard[player] = isNaN(value) ? null : value;
+      if (!isNaN(value)) foundCount++;
     }
   }
 
-  // 🛑 Si no encontró jugadores reales → NO COMMIT
-  if (found < 3) {
-    console.error("❌ Menos de 3 jugadores detectados. Abortando update.");
+  // 🛑 PROTECCIÓN 2 (CRÍTICA):
+  // Si no encontramos al menos 3 jugadores con score → NO COMMIT
+  if (foundCount < 3) {
+    console.error(
+      `❌ Solo se detectaron ${foundCount} jugadores con score. Abortando update.`
+    );
     process.exit(0);
   }
 
   const html = fs.readFileSync("index.html", "utf8");
 
-  const updated = html.replace(
+  const updatedHtml = html.replace(
     /leaderboard:\s*{[\s\S]*?}/,
     `leaderboard: ${JSON.stringify(leaderboard, null, 2)}`
   );
 
-  if (updated !== html) {
-    fs.writeFileSync("index.html", updated);
+  if (updatedHtml !== html) {
+    fs.writeFileSync("index.html", updatedHtml);
     console.log("✅ Leaderboard actualizado correctamente");
   } else {
-    console.log("ℹ️ Sin cambios");
+    console.log("ℹ️ Sin cambios detectados");
   }
 })();
