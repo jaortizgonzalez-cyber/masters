@@ -1,17 +1,25 @@
+leaderboard: {¡ATENCIÓN!:Este correo electrónico fue enviado desde fuera de la organización.
+No haga clic en enlaces ni abra archivos adjuntos, a menos que reconozca la
+cuenta de correo remitente y observe que el contenido es seguro. Seguridad de la
+Información.
+
+
+
+
 {
-  "Rory McIlroy": -5,
-  "Scottie Scheffler": -2,
-  "Ludvig Åberg": -1,
-  "Tommy Fleetwood": -1,
-  "Xander Schauffele": -1,
-  "Brooks Koepka": 0,
-  "Matt Fitzpatrick": 2,
-  "Hideki Matsuyama": 0,
-  "Robert MacIntyre": 1,
-  "Cameron Young": 1,
-  "Collin Morikawa": 2,
-  "Jon Rahm": 4,
-  "Viktor Hovland": 3,
-  "Bryson DeChambeau": 4,
-  "Nicolás Echavarría": 7
+  "Rory McIlroy": -5,
+  "Scottie Scheffler": -2,
+  "Ludvig Åberg": 2,
+  "Tommy Fleetwood": -1,
+  "Xander Schauffele": -2,
+  "Brooks Koepka": 0,
+  "Matt Fitzpatrick": 2,
+  "Hideki Matsuyama": 0,
+  "Robert MacIntyre": 8,
+  "Cameron Young": 1,
+  "Collin Morikawa": 2,
+  "Jon Rahm": 6,
+  "Viktor Hovland": 3,
+  "Bryson DeChambeau": 4,
+  "Nicolás Echavarría": 7
 }
