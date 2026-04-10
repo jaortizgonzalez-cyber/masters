@@ -1,1 +1,17 @@
-{"statusCode":200,"headers":{"Cache-Control":"no-store, no-cache","Pragma":"no-cache","Transfer-Encoding":"chunked","Vary":"Accept-Encoding","Set-Cookie":"ARRAffinity=8caeb05059d3cca279df646ab31322ab331590e57ba3aa32a65632aa567dcce6;Path=/;HttpOnly;Secure;Domain=conversionservice-eus2.azconn-eus2-003.p.azurewebsites.net,ARRAffinitySameSite=8caeb05059d3cca279df646ab31322ab331590e57ba3aa32a65632aa567dcce6;Path=/;HttpOnly;SameSite=None;Secure;Domain=conversionservice-eus2.azconn-eus2-003.p.azurewebsites.net","Strict-Transport-Security":"max-age=31536000; includeSubDomains","x-ms-request-id":"2a3a4ac1-ba7b-4532-90ee-1d742c9bde18","X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","x-ms-environment-id":"default-08b21273-c237-45f8-827d-8f8c05df41dd","x-ms-tenant-id":"08b21273-c237-45f8-827d-8f8c05df41dd","x-ms-subscription-id":"b9145aaa-9ce7-4e00-b34e-b19c7cdfdb2a","x-ms-dlp-re":"-|-","x-ms-dlp-gu":"-|-","x-ms-dlp-ef":"-|-/-|-|-|-","x-ms-mip-sl":"-|-|-|-","x-ms-au-creator-id":"493e17be-b3c3-470d-a7f1-0bab9539a35d","Timing-Allow-Origin":"*","x-ms-apihub-cached-response":"false","x-ms-apihub-obo":"false","Date":"Fri, 10 Apr 2026 02:37:01 GMT","Content-Type":"text/html; charset=utf-8","Expires":"-1","Content-Length":"693"},"body":"¡ATENCIÓN!:Este correo electrónico fue enviado desde fuera de la organización.\nNo haga clic en enlaces ni abra archivos adjuntos, a menos que reconozca la\ncuenta de correo remitente y observe que el contenido es seguro. Seguridad de la\nInformación.\n\n\n\n\n{\n  \"Rory McIlroy\": -5,\n  \"Scottie Scheffler\": -2,\n  \"Ludvig Åberg\": 2,\n  \"Tommy Fleetwood\": -1,\n  \"Xander Schauffele\": -2,\n  \"Brooks Koepka\": 0,\n  \"Matt Fitzpatrick\": 2,\n  \"Hideki Matsuyama\": 0,\n  \"Robert MacIntyre\": 8,\n  \"Cameron Young\": 1,\n  \"Collin Morikawa\": 2,\n  \"Jon Rahm\": 6,\n  \"Viktor Hovland\": 3,\n  \"Bryson DeChambeau\": 4,\n  \"Nicolás Echavarría\": 7\n}\n\n\nEnviado desde Outlook para iOS [https://aka.ms/o0ukef]"}
+{
+  "Rory McIlroy": -5,
+  "Scottie Scheffler": -2,
+  "Ludvig Åberg": 2,
+  "Tommy Fleetwood": -1,
+  "Xander Schauffele": -2,
+  "Brooks Koepka": 0,
+  "Matt Fitzpatrick": 2,
+  "Hideki Matsuyama": 0,
+  "Robert MacIntyre": 8,
+  "Cameron Young": 1,
+  "Collin Morikawa": 2,
+  "Jon Rahm": 6,
+  "Viktor Hovland": 3,
+  "Bryson DeChambeau": 4,
+  "Nicolás Echavarría": 7
+}
