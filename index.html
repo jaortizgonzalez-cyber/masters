@@ -864,23 +864,7 @@
       stakeCOP: 50000,
 
 <!-- LEADERBOARD_START -->
-      leaderboard: {
-  "Rory McIlroy": -5,
-  "Scottie Scheffler": -2,
-  "Ludvig Åberg": 2,
-  "Tommy Fleetwood": -1,
-  "Xander Schauffele": -2,
-  "Brooks Koepka": 0,
-  "Matt Fitzpatrick": 2,
-  "Hideki Matsuyama": 0,
-  "Robert MacIntyre": 8,
-  "Cameron Young": 1,
-  "Collin Morikawa": 2,
-  "Jon Rahm": 6,
-  "Viktor Hovland": 3,
-  "Bryson DeChambeau": 4,
-  "Nicolás Echavarría": 7
-}
+      leaderboard: {}
 <!-- LEADERBOARD_END -->
 
 ,
@@ -900,6 +884,22 @@
         { name:"Diego Niño",      picks:["Scottie Scheffler","Jon Rahm","Collin Morikawa","Rory McIlroy","Ludvig Åberg"]}
       ]
     };
+
+// ✅ Cargar leaderboard desde archivo externo (leaderboard.json)
+fetch("./leaderboard.json?ts=" + Date.now())
+  .then(r => r.json())
+  .then(lb => {
+    // Ignorar placeholder si existe
+    if (lb && lb.placeholder !== undefined) lb = {};
+    data.leaderboard = lb || {};
+    render();
+  })
+  .catch(err => {
+    console.error("No se pudo cargar leaderboard.json", err);
+    render();
+  });
+
+    
     // ✅ FIN DE SECCIÓN EDITABLE
 
     const $ = (id)=>document.getElementById(id);
@@ -1197,8 +1197,7 @@
     window.scrollToCards = scrollToCards;
     window.closeModal = closeModal;
 
-    // initial render
-    render();
+    // render() se ejecuta cuando cargue leaderboard.json
   </script>
 </body>
 </html>
