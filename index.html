@@ -41,6 +41,52 @@
       --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
+    /* ====== ANIMACIÓN CHOMP LEADER ====== */
+    .chomp-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: radial-gradient(circle, rgba(11,110,79,0.2) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .chomp-overlay.active { opacity: 1; }
+
+    .chomp-msg {
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 1000;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(244,196,48,0.6), 4px 4px 0px var(--bg0);
+      transform: scale(0.5);
+      animation: chompBlast 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards;
+      text-align: center;
+      line-height: 1;
+    }
+    
+    @keyframes chompBlast {
+      to { transform: scale(1); }
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      top: -20px;
+      opacity: 0;
+      animation: confettiFall 3s linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -699,7 +745,10 @@
 <body>
   <div class="glow" aria-hidden="true"></div>
 
-  <!-- 🐊 GATOR WATERMARK (agresivo) -->
+  <div class="chomp-overlay" id="chompOverlay" aria-hidden="true">
+    <div class="chomp-msg">🐊 CHOMP! <br>¡LÍDER ABSOLUTO! 🏆</div>
+  </div>
+
   <div class="gator-watermark" aria-hidden="true">
     <svg width="360" height="240" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">
       <circle cx="170" cy="110" r="104" fill="#0b6e4f" stroke="rgba(255,255,255,.14)" stroke-width="8"/>
@@ -721,7 +770,6 @@
         <div class="badge">🏌️ MASTERS AUGUSTA 2026 · POLLA</div>
 
         <div class="brand" title="Mascota oficial del grupo: El Caimán 🐊 (modo agresivo)">
-          <!-- 🐊 MINI LOGO (agresivo y claro) -->
           <svg class="gator-mini" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mascota caimán agresivo">
             <circle cx="100" cy="100" r="96" fill="#0b6e4f" stroke="rgba(255,255,255,.16)" stroke-width="6"/>
             <path d="M30 110 C50 70 120 40 165 65 C185 75 185 125 160 135 C120 155 70 150 40 135 Z" fill="#22c55e"/>
@@ -811,7 +859,6 @@
     <div class="grid" id="cards"></div>
   </div>
 
-  <!-- ===== MODAL / BOTTOM SHEET WOW ===== -->
   <div class="modal" id="modal" aria-hidden="true">
     <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Detalle apostador">
       <div class="handle" aria-hidden="true"></div>
@@ -843,7 +890,6 @@
   <div class="toast" id="toast">Copiado ✅</div>
 
   <footer style="max-width: var(--max); margin: 0 auto; padding: 10px 18px 34px; color: var(--muted); font-size: 12px; position:relative; z-index:2;">
-    <!-- ✅ Textos que pediste conservar (versiones anteriores) -->
     <div style="text-align:center; line-height:1.6;">
       Hecho para descrestarlos 😎 · Mascota oficial: el Caimán 🐊 · Apuesta: $50.000 COP c/u<br/>
       Actualiza en 30 segundos · Comparte el link en WhatsApp
@@ -863,10 +909,7 @@
       status: "En juego",
       stakeCOP: 50000,
 
-<!-- LEADERBOARD_START -->
-      leaderboard: {}
-<!-- LEADERBOARD_END -->
-
+leaderboard: {}
 ,
 
       bettors: [
@@ -905,6 +948,10 @@ fetch("./leaderboard.json?ts=" + Date.now())
     }
 
     render();
+    // Ejecutar celebración al cargar si hay un líder con score
+    if(rankedCache.length > 0 && rankedCache[0].total !== null) {
+        showChompCelebration(rankedCache[0].name);
+    }
   })
   .catch(err => {
     console.error("No se pudo cargar/parsear leaderboard.json", err);
@@ -1047,6 +1094,26 @@ fetch("./leaderboard.json?ts=" + Date.now())
       });
     }
 
+    // ===== ANIMATION HELPER =====
+    function showChompCelebration(name) {
+      const overlay = $("chompOverlay");
+      overlay.querySelector('.chomp-msg').innerHTML = `🐊 CHOMP! <br>${name.toUpperCase()} LÍDER! 🏆`;
+      overlay.classList.add("active");
+      
+      // Lanzar confeti
+      for(let i=0; i<40; i++) {
+        const confetti = document.createElement("div");
+        confetti.className = "confetti-piece";
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.backgroundColor = ["#f4c430", "#22c55e", "#ffffff"][Math.floor(Math.random()*3)];
+        confetti.style.animationDelay = Math.random() * 2 + "s";
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+      }
+
+      setTimeout(() => overlay.classList.remove("active"), 3500);
+    }
+
     // ===== MODAL LOGIC (WOW) =====
     const modal = $("modal");
     const sheet = $("sheet");
@@ -1062,6 +1129,11 @@ fetch("./leaderboard.json?ts=" + Date.now())
       currentIndex = idx;
 
       const t = totals[currentIndex];
+
+      // Si es el líder, activar animación al abrir
+      if(currentIndex === 0 && t.total !== null) {
+          showChompCelebration(t.name);
+      }
 
       $("mAvatar").textContent = initials(t.name);
       $("mName").textContent = t.name;
