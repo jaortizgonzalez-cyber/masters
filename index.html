@@ -887,17 +887,31 @@
 
 // ✅ Cargar leaderboard desde archivo externo (leaderboard.json)
 fetch("./leaderboard.json?ts=" + Date.now())
-  .then(r => r.json())
-  .then(lb => {
-    // Ignorar placeholder si existe
-    if (lb && lb.placeholder !== undefined) lb = {};
-    data.leaderboard = lb || {};
+  .then(r => r.text())
+  .then(t => {
+    // Limpieza fuerte: NBSP + BOM + espacios raros
+    t = t
+      .replace(/\u00A0/g, " ")   // NBSP
+      .replace(/\uFEFF/g, "")    // BOM
+      .trim();
+
+    const lb = JSON.parse(t);
+
+    // Ignora placeholder
+    if (lb && lb.placeholder !== undefined) {
+      data.leaderboard = {};
+    } else {
+      data.leaderboard = lb || {};
+    }
+
     render();
   })
   .catch(err => {
-    console.error("No se pudo cargar leaderboard.json", err);
+    console.error("No se pudo cargar/parsear leaderboard.json", err);
+    data.leaderboard = {};
     render();
   });
+
 
     
     // ✅ FIN DE SECCIÓN EDITABLE
