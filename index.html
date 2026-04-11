@@ -8,293 +8,132 @@
 
   <style>
     :root{
-      --bg0:#03110a;
-      --bg1:#07150e;
-      --card:#0f1b15;
-      --card2:#111f18;
-      --glass: rgba(255,255,255,.06);
-      --ring: rgba(255,255,255,.14);
-      --text:#e6f0eb;
-      --muted:#9fb8ad;
-
-      --green:#0b6e4f;
-      --green2:#0f8a63;
-      --lime:#22c55e;
-
-      --gold:#f4c430;
-      --silver:#cbd5e1;
-      --bronze:#fb7185;
-
-      --danger:#ef4444;
-      --success:#22c55e;
-
-      --shadow: rgba(0,0,0,.55);
-      --shadow2: rgba(0,0,0,.35);
-
-      --stickyTop: 12px;
-      --max: 1100px;
-
-      --radius: 18px;
-      --radius2: 22px;
-
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --bg0:#03110a; --bg1:#07150e; --card:#0f1b15; --card2:#111f18;
+      --text:#e6f0eb; --muted:#9fb8ad; --green:#0b6e4f; --green2:#0f8a63;
+      --gold:#f4c430; --success:#22c55e; --shadow: rgba(0,0,0,.55);
+      --radius2: 22px; --sans: system-ui, -apple-system, sans-serif;
+      --mono: ui-monospace, monospace;
     }
 
-    /* ====== ANIMACIÓN CHOMP LEADER ====== */
-    .chomp-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      background: radial-gradient(circle, rgba(11,110,79,0.2) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    .chomp-overlay.active { opacity: 1; }
-
-    .chomp-msg {
-      font-size: clamp(3rem, 10vw, 6rem);
-      font-weight: 1000;
-      color: var(--gold);
-      text-shadow: 0 0 30px rgba(244,196,48,0.6), 4px 4px 0px var(--bg0);
-      transform: scale(0.5);
-      animation: chompBlast 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards;
-      text-align: center;
-      line-height: 1;
-    }
-    
-    @keyframes chompBlast {
-      to { transform: scale(1); }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--text); font-family: var(--sans);
+      background: linear-gradient(180deg, var(--bg0), var(--bg1) 55%, var(--bg0));
+      overflow-x: hidden;
     }
 
-    .confetti-piece {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: var(--gold);
-      top: -20px;
-      opacity: 0;
-      animation: confettiFall 3s linear forwards;
+    header, .container { max-width: 1100px; margin: 0 auto; padding: 20px 18px; }
+
+    .hero {
+      border-radius: var(--radius2); border: 1px solid rgba(255,255,255,.1);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      padding: 20px; box-shadow: 0 18px 60px var(--shadow); backdrop-filter: blur(8px);
     }
 
-    @keyframes confettiFall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    .badge {
+      display: inline-flex; padding: 7px 12px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      font-size: 12px; font-weight: 950; margin-bottom: 10px;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--text);
-      font-family:var(--sans);
-      overflow-x:hidden;
-      background:
-        radial-gradient(1200px 520px at 18% 0%, rgba(15,138,99,.26), transparent 60%),
-        radial-gradient(900px 520px at 92% 15%, rgba(11,110,79,.22), transparent 55%),
-        linear-gradient(180deg,var(--bg0), var(--bg1) 55%, var(--bg0));
+    .hero-box {
+      background: rgba(0,0,0,.18); border-radius: 16px; padding: 12px;
+      border: 1px solid rgba(255,255,255,.1); margin-top: 15px;
     }
 
-    .glow{
-      position:fixed;
-      inset:-200px;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(520px 260px at 20% 10%, rgba(34,197,94,.12), transparent 60%),
-        radial-gradient(520px 260px at 80% 20%, rgba(11,110,79,.16), transparent 60%),
-        radial-gradient(420px 220px at 60% 80%, rgba(244,196,48,.08), transparent 60%);
-      filter: blur(6px);
-      opacity:.9;
+    .leaderboard {
+      margin: 20px 0; position: sticky; top: 12px; z-index: 10;
+      border-radius: var(--radius2); border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, rgba(11,110,79,.98), rgba(15,138,99,.94));
+      padding: 15px; backdrop-filter: blur(8px); box-shadow: 0 20px 50px var(--shadow);
     }
 
-    .gator-watermark{
-      position:fixed;
-      right:-90px;
-      top:120px;
-      opacity:.10;
-      transform: rotate(10deg);
-      z-index:0;
-      pointer-events:none;
-      filter: drop-shadow(0 18px 30px rgba(0,0,0,.45));
+    .rank-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px; border-radius: 14px; background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12); margin-bottom: 8px; cursor: pointer;
     }
 
-    header{
-      position:relative;
-      z-index:2;
-      max-width:var(--max);
-      margin:0 auto;
-      padding:26px 18px 12px;
-    }
-    .container{
-      position:relative;
-      z-index:2;
-      max-width:var(--max);
-      margin:0 auto;
-      padding:10px 18px 28px;
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
+    @media(min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+    /* ESTILO DE LA CARD RECONSTRUIDO */
+    .card {
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius2);
+      padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
-    .hero{
-      border-radius:var(--radius2);
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(800px 240px at 15% 0%, rgba(15,138,99,.28), transparent 60%),
-        radial-gradient(800px 240px at 85% 20%, rgba(11,110,79,.22), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: 0 18px 60px var(--shadow);
-      padding:16px 16px 14px;
-      backdrop-filter: blur(8px);
+    .card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
     }
 
-    .topline{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
+    .avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 1000; font-size: 14px;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:7px 12px;
-      border-radius:999px;
-      background:linear-gradient(135deg,var(--green),var(--green2));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 10px 26px rgba(0,0,0,.25);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.35px;
-      user-select:none;
+    .who-info { display: flex; flex-direction: column; gap: 2px; }
+
+    .pick-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.03);
+      font-size: 14px;
     }
 
-    .gator-mini{
-      width:54px;
-      height:54px;
-      animation:gatorFloat 3.3s ease-in-out infinite;
-    }
-    @keyframes gatorFloat{
-      0%,100%{ transform: translateY(0); }
-      50%{ transform: translateY(-3px); }
-    }
+    .pick-name { color: var(--muted); font-weight: 500; }
+    .pick-earning { font-family: var(--mono); font-weight: 900; }
 
-    h1{ margin:10px 0 6px; font-size:28px; font-weight:1000; line-height:1.1; }
-    .sub{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color:var(--muted); font-size:13px; }
-
-    .chip{
-      display:inline-flex; align-items:center; gap:8px; padding:5px 10px; border-radius:999px;
-      background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10);
-      color:rgba(230,240,235,.95); font-size:12px; font-weight:850;
+    .btn {
+      appearance: none; border: none; cursor: pointer; padding: 10px 15px;
+      border-radius: 12px; font-weight: 950; color: white;
+      background: var(--green); border: 1px solid rgba(255,255,255,0.2);
     }
 
-    .hero-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
-    .hero-box{
-      flex:1 1 230px; min-width:210px; border-radius:16px; border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.18); padding:12px;
+    .toast {
+      position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+      background: var(--bg1); border: 1px solid var(--gold);
+      padding: 10px 20px; border-radius: 10px; display: none; z-index: 10000;
     }
-    .hero-box .k{ font-size:12px; color:rgba(255,255,255,.85); font-weight:900; }
-    .hero-box .big{ font-size:18px; font-weight:1000; color:var(--gold); }
-
-    .btn{
-      appearance:none; border:none; cursor:pointer; padding:10px 12px; border-radius:14px;
-      font-weight:950; color:white; background:rgba(0,0,0,.20); border:1px solid rgba(255,255,255,.14);
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .btn.primary{ background:linear-gradient(135deg,var(--green),var(--green2)); }
-
-    .leaderboard{
-      margin-top:16px; position:sticky; top:var(--stickyTop); z-index:10;
-      border-radius:var(--radius2); border:1px solid rgba(255,255,255,.12);
-      background:linear-gradient(135deg, rgba(11,110,79,.98), rgba(15,138,99,.94));
-      padding:14px; backdrop-filter: blur(8px);
-    }
-
-    .rank-row{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      padding:10px 12px; border-radius:14px; background:rgba(0,0,0,.22);
-      border:1px solid rgba(255,255,255,.12); cursor:pointer; margin-bottom:8px;
-    }
-    .rank-row.leader{ border-color:var(--gold); }
-    .sc{ font-weight:1000; font-family:var(--mono); color:var(--gold); }
-
-    .grid{ margin-top:16px; display:grid; grid-template-columns:1fr; gap:14px; }
-    @media(min-width:900px){ .grid{ grid-template-columns:1fr 1fr; } }
-
-    .card{
-      background:linear-gradient(180deg, rgba(15,27,21,.92), rgba(17,31,24,.86));
-      border:1px solid rgba(255,255,255,.10); border-radius:var(--radius2); padding:14px;
-    }
-    .avatar{
-      width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--green),var(--green2));
-      display:flex; align-items:center; justify-content:center; font-weight:1000;
-    }
-
-    .modal{ position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; z-index:1000; background:rgba(0,0,0,.62); }
-    .modal.show{ display:flex; }
-    .sheet{ width:min(780px, 100%); border-radius:24px 24px 0 0; background:var(--bg1); border:1px solid rgba(255,255,255,.14); padding:20px; }
-
-    .toast{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:9999; padding:10px 12px; border-radius:14px; background:var(--bg1); border:1px solid var(--gold); display:none; font-weight:950; }
   </style>
 </head>
 
 <body>
-  <div class="glow"></div>
-  <div class="chomp-overlay" id="chompOverlay">
-    <div class="chomp-msg">🐊 CHOMP! <br>¡LÍDER ABSOLUTO! 🏆</div>
-  </div>
-
   <header>
     <div class="hero">
-      <div class="topline">
-        <div class="badge">🏌️ MASTERS AUGUSTA 2026 · POLLA</div>
-        <svg class="gator-mini" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="#0b6e4f"/><path d="M30 110 C50 70 120 40 165 65 C185 75 185 125 160 135 C120 155 70 150 40 135 Z" fill="#22c55e"/></svg>
+      <div class="badge">🏌️ MASTERS AUGUSTA 2026</div>
+      <h1>Polla: Ranking de Ganancias</h1>
+      <div class="hero-box">
+        <span style="font-size:12px; font-weight:800;">💰 POZO TOTAL:</span>
+        <span id="potBig" style="font-size:20px; font-weight:1000; color:var(--gold); margin-left:10px;">—</span>
       </div>
-      <h1>Ranking por Ganancias (USD)</h1>
-      <div class="sub">
-        <span class="chip" id="chipStatus">📅 —</span>
-        <span class="chip">Regla: Gana quien sume más dinero 💰</span>
-      </div>
-      <div class="hero-row">
-        <div class="hero-box"><div class="k">💰 POZO POLLA</div><div class="big" id="potBig">—</div></div>
-        <div class="hero-box">
-          <div class="cta">
-            <button class="btn primary" onclick="copyWhatsApp()">📋 WhatsApp</button>
-            <button class="btn" onclick="scrollToCards()">👇 Ver cards</button>
-          </div>
-        </div>
+      <div style="margin-top:15px; display:flex; gap:10px;">
+        <button class="btn" onclick="copyWhatsApp()">📋 WhatsApp</button>
+        <button class="btn" onclick="window.scrollTo({top: 800, behavior:'smooth'})">👇 Ver Detalle</button>
       </div>
     </div>
   </header>
 
   <div class="container">
     <div class="leaderboard">
-      <h2 style="margin:0 0 10px; font-size:18px;">🏆 Clasificación General</h2>
-      <div class="rank" id="ranking"></div>
+      <h2 style="margin:0 0 10px; font-size:18px;">🏆 Tabla de Posiciones</h2>
+      <div id="ranking"></div>
     </div>
+
+    <h2 style="margin:40px 0 20px;">👤 Detalle por Apostador</h2>
     <div class="grid" id="cards"></div>
   </div>
 
-  <div class="modal" id="modal" onclick="closeModal()">
-    <div class="sheet" onclick="event.stopPropagation()">
-        <div id="mBody"></div>
-        <button class="btn" style="margin-top:20px; width:100%;" onclick="closeModal()">Cerrar</button>
-    </div>
-  </div>
-
-  <div class="toast" id="toast">Copiado ✅</div>
+  <div id="toast" class="toast">Copiado ✅</div>
 
   <script>
     const data = {
-      dateLabel: "Viernes · Ronda 2",
-      status: "Bolsa Proyectada",
       stakeCOP: 50000,
-      leaderboard: {},
+      leaderboard: {}, 
       bettors: [
         { name:"Ronnie Sanchez",  picks:["Scottie Scheffler","Jon Rahm","Xander Schauffele","Cameron Young","Hideki Matsuyama"]},
         { name:"Juan Ardila",     picks:["Scottie Scheffler","Bryson DeChambeau","Ludvig Åberg","Tommy Fleetwood","Jon Rahm"]},
@@ -311,71 +150,66 @@
       ]
     };
 
-    const parseMoney = (s) => s ? Number(s.replace(/[^0-9.-]+/g,"")) : 0;
-    const fmtUSD = n => new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 }).format(n);
-    const fmtCOP = n => new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 }).format(n);
-    const initials = n => n.split(" ").map(p=>p[0]).join("").toUpperCase();
+    const parseMoney = s => s ? Number(s.replace(/[^0-9.-]+/g,"")) : 0;
+    const fmtUSD = n => new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n);
+    const fmtCOP = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(n);
 
     function computeRanked(){
       return data.bettors.map(b => {
-        const earnings = b.picks.map(p => parseMoney(data.leaderboard[p]));
-        const total = earnings.reduce((a,b)=>a+b, 0);
+        const total = b.picks.reduce((acc, p) => acc + parseMoney(data.leaderboard[p]), 0);
         return { ...b, total };
-      }).sort((a,b)=>b.total - a.total);
+      }).sort((a,b) => b.total - a.total);
     }
 
     function render(){
-      document.getElementById("chipStatus").textContent = `📅 ${data.dateLabel} · ${data.status}`;
-      document.getElementById("potBig").textContent = fmtCOP(data.bettors.length * data.stakeCOP);
-      
       const ranked = computeRanked();
-      const rankDiv = document.getElementById("ranking");
-      rankDiv.innerHTML = ranked.map((t,i)=>`
-        <div class="rank-row ${i===0?'leader':''}" onclick="openModalByIndex(${i})">
-          <span style="font-weight:1000; width:30px;">${i+1}</span>
+      document.getElementById("potBig").textContent = fmtCOP(data.bettors.length * data.stakeCOP);
+
+      // Render Ranking
+      document.getElementById("ranking").innerHTML = ranked.map((t,i) => `
+        <div class="rank-row">
+          <span style="font-weight:900; width:30px;">${i+1}</span>
           <span style="flex-grow:1; font-weight:1000;">${t.name}</span>
-          <span class="sc">${fmtUSD(t.total)}</span>
+          <span style="color:var(--gold); font-weight:1000; font-family:var(--mono);">${fmtUSD(t.total)}</span>
         </div>
       `).join("");
 
-      const cardsDiv = document.getElementById("cards");
-      cardsDiv.innerHTML = ranked.map(t=>`
+      // Render Cards (DETALLE CLARO POR JUGADOR)
+      document.getElementById("cards").innerHTML = ranked.map(t => `
         <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <div style="display:flex; gap:10px; align-items:center;">
-                <div class="avatar">${initials(t.name)}</div>
-                <span style="font-weight:1000;">${t.name}</span>
+          <div class="card-header">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div class="avatar">${t.name.split(" ").map(n=>n[0]).join("")}</div>
+              <div class="who-info">
+                <span style="font-weight:1000; font-size:16px;">${t.name}</span>
+                <span style="font-size:11px; color:var(--muted); text-transform:uppercase;">Picks del Torneo</span>
+              </div>
             </div>
-            <div style="font-family:var(--mono); font-weight:1000; color:var(--gold);">${fmtUSD(t.total)}</div>
+            <div style="text-align:right;">
+              <div style="font-size:10px; color:var(--muted);">TOTAL ACUMULADO</div>
+              <div style="color:var(--gold); font-weight:1000; font-size:18px; font-family:var(--mono);">${fmtUSD(t.total)}</div>
+            </div>
           </div>
-          ${t.picks.map(p=>`
-            <div style="display:flex; justify-content:space-between; font-size:13px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.05);">
-              <span style="color:var(--muted);">${p}</span>
-              <span style="font-weight:1000; color:${parseMoney(data.leaderboard[p]) > 0 ? 'var(--success)' : 'white'}">
-                ${data.leaderboard[p] || "$0"}
-              </span>
-            </div>
-          `).join("")}
+          
+          <div class="picks-list">
+            ${t.picks.map(p => {
+              const val = data.leaderboard[p] || "$0";
+              const numVal = parseMoney(val);
+              return `
+                <div class="pick-row">
+                  <span class="pick-name">${p}</span>
+                  <span class="pick-earning" style="color:${numVal > 0 ? 'var(--success)' : 'var(--text)'}">
+                    ${val}
+                  </span>
+                </div>
+              `;
+            }).join("")}
+          </div>
         </div>
       `).join("");
     }
 
-    function showChompCelebration(name) {
-      const overlay = document.getElementById("chompOverlay");
-      overlay.querySelector('.chomp-msg').innerHTML = `🐊 CHOMP! <br>${name.toUpperCase()} GANA! 💰`;
-      overlay.classList.add("active");
-      setTimeout(() => overlay.classList.remove("active"), 3000);
-    }
-
-    function openModalByIndex(idx){
-      const t = computeRanked()[idx];
-      if(idx === 0 && t.total > 0) showChompCelebration(t.name);
-      document.getElementById("mBody").innerHTML = `<h2 style="color:var(--gold);">${t.name}</h2><h3>Total Ganado: ${fmtUSD(t.total)}</h3>`;
-      document.getElementById("modal").classList.add("show");
-    }
-
-    function closeModal(){ document.getElementById("modal").classList.remove("show"); }
-
+    // Cargar datos del servidor
     fetch("./leaderboard.json?ts="+Date.now())
       .then(r => r.json())
       .then(j => { data.leaderboard = j; render(); })
@@ -390,8 +224,6 @@
         t.style.display="block"; setTimeout(()=>t.style.display="none", 2000);
       });
     }
-
-    function scrollToCards(){ document.getElementById("cards").scrollIntoView({behavior:"smooth"}); }
   </script>
 </body>
 </html>
