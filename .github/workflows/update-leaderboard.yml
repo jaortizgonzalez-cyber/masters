@@ -2,7 +2,7 @@ name: Auto Update Masters Leaderboard
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    # - cron: "*/5 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
